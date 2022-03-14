@@ -155,7 +155,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-study1/">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/13/bio-study1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpg">
@@ -169,7 +169,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/03/15/bio-study1/" class="post-title-link" itemprop="url">生信学习笔记01——绘图相关</a>
+            <a href="/2022/03/13/bio-study1/" class="post-title-link" itemprop="url">生信学习笔记01——绘图相关</a>
         </h2>
 
         <div class="post-meta">
@@ -178,10 +178,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-03-15 00:36:21 / 修改时间：00:41:55" itemprop="dateCreated datePublished" datetime="2022-03-15T00:36:21+08:00">2022-03-15</time>
+              <time title="创建时间：2022-03-13 00:36:21" itemprop="dateCreated datePublished" datetime="2022-03-13T00:36:21+08:00">2022-03-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-15 02:01:48" itemprop="dateModified" datetime="2022-03-15T02:01:48+08:00">2022-03-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -203,7 +209,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><pre>
+          <blockquote>
+<p>从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高</p>
+</blockquote>
+<h1 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1.准备工作"></a>1.准备工作</h1><pre>
 #设置清华镜像
 options("repos"=c(CRAN="http://mirrors.tuna.tsinghua.edu.cn/CRAN/"))`
 </pre>
@@ -215,20 +224,61 @@ if(!require(eoffice))install.packages("eoffice",update = F,ask = F)
 if(!require(patchwork))install.packages("patchwork",update = F,ask = F)
 </pre>
 
-<p>出现了一个报错，发现是一个”rlang”的包版本不对，重新安装后顺利加载</p>
+<p>出现了一个报错，发现是一个<strong>rlang</strong>的包版本不对，重新安装后顺利加载</p>
 <pre>
 # Error: package or namespace load failed for ‘eoffice’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
  载入了名字空间‘rlang’ 0.4.12，但需要的是>= 1.0.1
 install.packages("rlang")
 </pre>
 
-<h1 id="绘图"><a href="#绘图" class="headerlink" title="绘图"></a>绘图</h1><p>绘图函数可以分为高级和低级绘图函数，互为补充</p>
+<h1 id="2-绘图"><a href="#2-绘图" class="headerlink" title="2.绘图"></a>2.绘图</h1><p>绘图函数可以分为高级和低级绘图函数，互为补充</p>
 <ul>
 <li>plot</li>
 <li>ggplot</li>
 <li>ggpubr（美化版本）</li>
 </ul>
+<h2 id="2-0-入门级绘图模板"><a href="#2-0-入门级绘图模板" class="headerlink" title="2.0 入门级绘图模板"></a>2.0 入门级绘图模板</h2><p> 基本格式如下所示，展示内置的<strong>iris</strong>数据中，绘制以xy参数的散点图</p>
+<pre>
+ggplot(data = iris)+
+  geom_point(mapping = aes(x = Sepal.Length,
+                           y = Petal.Length))
+</pre>
 
+
+<h2 id="2-1-属性的设置"><a href="#2-1-属性的设置" class="headerlink" title="2.1 属性的设置"></a>2.1 属性的设置</h2><p>属性的设置需要设置为该类中有意义的值</p>
+<table border="1.5">
+  <tr> <th>属性</th><th>参数</th> </tr>
+  <tr> <th>颜色</th><th>color</th> </tr>
+  <tr> <th>大小</th><th>size</th> </tr>
+  <tr> <th>形状</th><th>shape</th> </tr>
+  <tr> <th>透明度</th><th>alpha</th> </tr>
+  <tr> <th>填充颜色</th><th>fill</th> </tr>
+</table>
+shape的形状如下所示，可以直接引用相关的数字
+
+<p><img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png" alt="ggplot-shape"></p>
+<pre>
+#设置颜色为蓝色
+ggplot(data = iris) + 
+  geom_point(mapping = aes(x = Sepal.Length,
+                           y = Petal.Length), 
+             color = "blue")
+#继续调整点大小，透明度，形状
+ggplot(data = iris) + 
+  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length), 
+             size = 5,     # 点的大小5mm
+             alpha = 0.5,  # 透明度 50%
+             shape = 8)  # 点的形状
+</pre>
+
+<h2 id="2-2映射"><a href="#2-2映射" class="headerlink" title="2.2映射"></a>2.2映射</h2><p>按照数据框的某一列定义属性</p>
+<pre>
+#注意在aes函数之内定义了颜色，参数是列名，而不是具体颜色
+ggplot(data = iris)+
+  geom_point(mapping = aes(x = Sepal.Length,
+                           y = Petal.Length,
+                           color = Species))
+</pre>
       
     </div>
 
@@ -329,6 +379,14 @@ install.packages("rlang")
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0000-0002-5405-3090" title="ORCiD → https:&#x2F;&#x2F;orcid.org&#x2F;0000-0002-5405-3090" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>ORCiD</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/fanchenyu@tongji.edu.cn" title="E-Mail → fanchenyu@tongji.edu.cn"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
