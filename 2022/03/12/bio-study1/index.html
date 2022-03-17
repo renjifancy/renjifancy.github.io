@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -23,16 +23,16 @@
 <link rel="stylesheet" href="/js/prism/prism.css">
   <meta name="description" content="从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高  准备工作#设置清华镜像 options(&quot;repos&quot;&#x3D;c(CRAN&#x3D;&quot;http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;CRAN&#x2F;&quot;)  #安装R包 if(!require(ggplot2))install.packages(&#39;ggplot2&#39;,update &#x3D; F,ask &#x3D; F) if(!requir">
 <meta property="og:type" content="article">
-<meta property="og:title" content="生信学习笔记01——ggplot绘图">
-<meta property="og:url" content="http://blog.rjny.icu/2022/03/13/bio-study1/index.html">
+<meta property="og:title" content="生信学习笔记01——ggplot绘图(1)">
+<meta property="og:url" content="http://blog.rjny.icu/2022/03/12/bio-study1/index.html">
 <meta property="og:site_name" content="Dr Fan&#39;s">
 <meta property="og:description" content="从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高  准备工作#设置清华镜像 options(&quot;repos&quot;&#x3D;c(CRAN&#x3D;&quot;http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;CRAN&#x2F;&quot;)  #安装R包 if(!require(ggplot2))install.packages(&#39;ggplot2&#39;,update &#x3D; F,ask &#x3D; F) if(!requir">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png">
-<meta property="og:image" content="http://r8qv6kv54.bkt.clouddn.com/%E5%9B%BE%E7%89%87/Rplot.png">
-<meta property="og:image" content="http://r8qv6kv54.bkt.clouddn.com/%E5%9B%BE%E7%89%87/Rplot01.png">
-<meta property="article:published_time" content="2022-03-12T16:36:21.000Z">
-<meta property="article:modified_time" content="2022-03-17T03:26:12.131Z">
+<meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot.png">
+<meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot01.png">
+<meta property="article:published_time" content="2022-03-11T16:36:21.000Z">
+<meta property="article:modified_time" content="2022-03-17T13:01:38.756Z">
 <meta property="article:author" content="Chenyu Fan">
 <meta property="article:tag" content="ggplot">
 <meta property="article:tag" content="生信">
@@ -40,7 +40,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png">
 
-<link rel="canonical" href="http://blog.rjny.icu/2022/03/13/bio-study1/">
+<link rel="canonical" href="http://blog.rjny.icu/2022/03/12/bio-study1/">
 
 
 <script id="page-configurations">
@@ -49,11 +49,11 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'zh-CN'
+    lang   : 'en'
   };
 </script>
 
-  <title>生信学习笔记01——ggplot绘图 | Dr Fan's</title>
+  <title>生信学习笔记01——ggplot绘图(1) | Dr Fan's</title>
   
 
 
@@ -93,7 +93,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -120,24 +120,29 @@
 
 <nav class="site-nav">
   <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
+        <li class="menu-item menu-item-blog">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-book fa-fw"></i>Blog</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
   </ul>
@@ -167,8 +172,8 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/13/bio-study1/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/12/bio-study1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpg">
@@ -181,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          生信学习笔记01——ggplot绘图
+          生信学习笔记01——ggplot绘图(1)
         </h1>
 
         <div class="post-meta">
@@ -189,22 +194,22 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">发表于</span>
+              <span class="post-meta-item-text">Posted on</span>
 
-              <time title="创建时间：2022-03-13 00:36:21" itemprop="dateCreated datePublished" datetime="2022-03-13T00:36:21+08:00">2022-03-13</time>
+              <time title="Created: 2022-03-12 00:36:21" itemprop="dateCreated datePublished" datetime="2022-03-12T00:36:21+08:00">2022-03-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-17 11:26:12" itemprop="dateModified" datetime="2022-03-17T11:26:12+08:00">2022-03-17</time>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-17 21:01:38" itemprop="dateModified" datetime="2022-03-17T21:01:38+08:00">2022-03-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
-              <span class="post-meta-item-text">分类于</span>
+              <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
                 </span>
@@ -232,7 +237,7 @@ if(!require(ggplot2))install.packages('ggplot2',update = F,ask = F)
 if(!require(ggpubr))install.packages('ggpubr',update = F,ask = F)
 if(!require(eoffice))install.packages("eoffice",update = F,ask = F)
 if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
-
+<span id="more"></span>
 <p>出现了一个报错，发现是一个<strong>rlang</strong>的包版本不对，重新安装后顺利加载</p>
 <pre>
 # Error: package or namespace load failed for ‘eoffice’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
@@ -319,10 +324,26 @@ ggplot(data = test)+
   geom_point(mapping = aes(x = a,
                            y = b,
                            color = change))+
-  scale_color_manual(values = c("blue","grey","red"))
+  scale_color_manual(values = c("blue","grey","red")) 
+
+#如何根据变量自定义颜色
+1.查看所有变量名字
+unique(test$change)   #[1] "up"     "down"   "stable"
+2.定义每个变量的颜色
+uni_color = c("blue","grey","red")
+names(uni_color)= c("up","down","stable")
+uni_color 
+--  up   down stable 
+--"blue" "grey"  "red"
+3.重新绘制
+ggplot(data = test)+
+  geom_point(mapping = aes(x = a,
+                           y = b,
+                           color = change))+
+  scale_color_manual(values = uni_color)
 </pre>
 <figure class="two">
-<img src="http://r8qv6kv54.bkt.clouddn.com/%E5%9B%BE%E7%89%87/Rplot.png" width="450"/><img src="http://r8qv6kv54.bkt.clouddn.com/%E5%9B%BE%E7%89%87/Rplot01.png" width="450"/>
+  <img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot.png" width="350"/><img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot01.png" width="350"/>
 </figure>
 
 
@@ -344,11 +365,11 @@ ggplot(data = test)+
 
         
     <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2022/03/13/bio-study2/" rel="prev" title="生信学习笔记02——ggblur绘图">
-      <i class="fa fa-chevron-left"></i> 生信学习笔记02——ggblur绘图
-    </a></div>
       <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/13/bio-study2/" rel="next" title="生信学习笔记02——ggplot绘图(2)">
+      生信学习笔记02——ggplot绘图(2) <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -398,10 +419,10 @@ ggplot(data = test)+
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          文章目录
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          站点概览
+          Overview
         </li>
       </ul>
 
@@ -423,21 +444,21 @@ ggplot(data = test)+
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
-          <span class="site-state-item-name">日志</span>
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
         <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">分类</span></a>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
         <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">标签</span></a>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -475,7 +496,7 @@ ggplot(data = test)+
   </span>
   <span class="author" itemprop="copyrightHolder">Chenyu Fan</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
 <script src="/js/prism/prism.js" async></script>
   <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">沪ICP备2021028644号-1 </a>
