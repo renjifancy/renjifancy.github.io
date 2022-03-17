@@ -161,6 +161,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-study4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/15/bio-study4/" class="post-title-link" itemprop="url">生信学习笔记04——R语言综合(1)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-15 08:36:21" itemprop="dateCreated datePublished" datetime="2022-03-15T08:36:21+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-17 22:48:23" itemprop="dateModified" datetime="2022-03-17T22:48:23+08:00">2022-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><pre>
+#安装必要的R包
+options("repos" = c(CRAN="http://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
+if(!require(tidyr))install.packages("tidyr",update = F,ask = F)
+if(!require(dplyr))install.packages("dplyr",update = F,ask = F)
+if(!require(stringr))install.packages('stringr',update = F,ask = F)
+if(!require(tibble))install.packages('tibble',update = F,ask = F)
+library(tidyr)
+library(dplyr)
+library(stringr)
+library(tibble)
+</pre>
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/14/bio-study3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -192,7 +278,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-17 18:59:45" itemprop="dateModified" datetime="2022-03-17T18:59:45+08:00">2022-03-17</time>
+                <time title="Modified: 2022-03-17 22:21:11" itemprop="dateModified" datetime="2022-03-17T22:21:11+08:00">2022-03-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,7 +301,55 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h1 id="ggpubr的应用"><a href="#ggpubr的应用" class="headerlink" title="ggpubr的应用"></a>ggpubr的应用</h1><p>举例-箱线图中加入统计计算</p>
+<pre>
+library(ggpubr)
+ggscatter(iris,x="Sepal.Length",
+          y="Petal.Length",
+          color="Species")
+
+p <- ggboxplot(iris, x = "Species", 
+               y = "Sepal.Length",
+               color = "Species", 
+               shape = "Species",
+               add = "jitter")
+p
+my_comparisons <- list( c("setosa", "versicolor"), 
+                        c("setosa", "virginica"), 
+                        c("versicolor", "virginica") )
+p + stat_compare_means(comparisons = my_comparisons)+ # Add pairwise comparisons p-value
+  stat_compare_means(label.y = 9)
+</pre> 
+<p><img src="http://cdn.rjny.icu/ggplot3/Rplot01.png" alt="ggplot-1"></p>
+<p>STHDA网站上也有丰富的绘图样本及代码</p>
+<h1 id="图片保存"><a href="#图片保存" class="headerlink" title="图片保存"></a>图片保存</h1><pre>
+#ggplot2 保存方法
+ggsave(p,filename = "iris_box_ggpubr.png")
+
+#三段保存
+pdf("x.pdf")
+boxplot(iris[,1]~iris[,5])
+text(6.5,4, labels = 'hello')
+dev.off()  #关闭画板
+
+#eoffice包
+library(eoffice)
+topptx(p,"iris_box_ggpubr.pptx")
+</pre> 
+
+<h1 id="图片拼接–patchwork"><a href="#图片拼接–patchwork" class="headerlink" title="图片拼接–patchwork"></a>图片拼接–patchwork</h1><pre>
+library(ggplot2)
+library(patchwork)
+p1 <- ggplot(mpg) + 
+  geom_point(aes(hwy, displ))
+p2 <- ggplot(mpg) + 
+  geom_bar(aes(manufacturer, fill = stat(count))) + 
+  coord_flip()
+p1 + p2
+p1 / p2
+</pre>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/p7LLLvzR5LPgHhuRGhYQBQ">patchwork包的更多信息</a></p>
+
       
     </div>
 
@@ -480,7 +614,7 @@ if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -493,7 +627,7 @@ if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
