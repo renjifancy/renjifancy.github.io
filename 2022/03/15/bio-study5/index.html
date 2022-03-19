@@ -21,15 +21,23 @@
   </script>
 
 <link rel="stylesheet" href="/js/prism/prism.css">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Dr Fan&#39;s">
-<meta property="og:url" content="http://blog.rjny.icu/tags/ggplot/index.html">
+  <meta name="description" content="专题4.字符串字符串长度 str_length  str_length(x)  #空格也算   字符串拆分 str_split  str_split(x,&quot; &quot;) # 取出为列表 str_split(x,&quot; &quot;)[ [1] ] # 取出为向量   按位置提取字符 str_sub  str_sub(x,5,9) #5~9字字符   字符检测 str_detect  str_detect(x,&quot;h&quot;)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生信学习笔记05——R语言综合(2)">
+<meta property="og:url" content="http://blog.rjny.icu/2022/03/15/bio-study5/index.html">
 <meta property="og:site_name" content="Dr Fan&#39;s">
+<meta property="og:description" content="专题4.字符串字符串长度 str_length  str_length(x)  #空格也算   字符串拆分 str_split  str_split(x,&quot; &quot;) # 取出为列表 str_split(x,&quot; &quot;)[ [1] ] # 取出为向量   按位置提取字符 str_sub  str_sub(x,5,9) #5~9字字符   字符检测 str_detect  str_detect(x,&quot;h&quot;)">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://cdn.rjny.icu/ggplot3/002.JPG">
+<meta property="article:published_time" content="2022-03-15T01:36:21.000Z">
+<meta property="article:modified_time" content="2022-03-19T03:46:18.751Z">
 <meta property="article:author" content="Chenyu Fan">
+<meta property="article:tag" content="生信">
+<meta property="article:tag" content="R">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.rjny.icu/ggplot3/002.JPG">
 
-<link rel="canonical" href="http://blog.rjny.icu/tags/ggplot/">
+<link rel="canonical" href="http://blog.rjny.icu/2022/03/15/bio-study5/">
 
 
 <script id="page-configurations">
@@ -37,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Tag: ggplot | Dr Fan's</title>
+  <title>生信学习笔记05——R语言综合(2) | Dr Fan's</title>
   
 
 
@@ -155,91 +163,186 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">ggplot
-          <small>Tag</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-study5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          生信学习笔记05——R语言综合(2)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-15 09:36:21" itemprop="dateCreated datePublished" datetime="2022-03-15T09:36:21+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-19 11:46:18" itemprop="dateModified" datetime="2022-03-19T11:46:18+08:00">2022-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+        <h1 id="专题4-字符串"><a href="#专题4-字符串" class="headerlink" title="专题4.字符串"></a>专题4.字符串</h1><p><strong>字符串长度 str_length</strong></p>
+<pre>
+str_length(x)  #空格也算
+</pre>
+
+<p><strong>字符串拆分 str_split</strong></p>
+<pre>
+str_split(x," ") # 取出为列表
+str_split(x," ")[ [1] ] # 取出为向量
+</pre>
+
+<p><strong>按位置提取字符 str_sub</strong></p>
+<pre>
+str_sub(x,5,9) #5~9字字符
+</pre>
+
+<p><strong>字符检测 str_detect</strong></p>
+<pre>
+str_detect(x,"h")  #返回true or false
+str_starts
+srt_ends
+</pre>
+
+<p><strong>字符串替换str_replace</strong></p>
+<pre>
+str_replace(x,"","")
+str_replace_all 
+</pre>
+
+<p><strong>字符串删除str_remove</strong></p>
+<pre>
+str_remove(x,"")
+str_remove_all 
+</pre>
+
+<h1 id="专题5-1-条件语句"><a href="#专题5-1-条件语句" class="headerlink" title="专题5.1.条件语句"></a>专题5.1.条件语句</h1><pre>
+if (一个逻辑值){
+CODE1
+}else{
+CODE2
+}
+#ifelse函数
+ifelse(x,yes,no)
+ifelse(str_detect(x,"s"),"+","-") #联用可以用于分组
+</pre>
+
+<h2 id="小作业"><a href="#小作业" class="headerlink" title="小作业"></a>小作业</h2><pre>
+1.读取group数据,并从第二列中提取数据
+data<- read.csv("group.csv") #注意加双引号
+a<-str_split(data$title," ",simplify = T)[,4]
+data$group <- a
+2.把提取出的字符改为小写
+data$group <- tolower(data$group)
+3.加载deg.Rdata,根据a、b两列的值，按照以下条件生成向量x：
+a< -1 且b<0.05,则x对应的值为down；
+a>1 且b<0.05,则x对应的值为up；
+其他情况，x对应的值为no
+统计up、down、no各重复了多少次
+x<-ifelse(deg$a < -1  & deg$b < 0.05,"down",
+       (ifelse(deg$a > 1 & deg$b < 0.05,"up","no")))
+deg$x <- x
+table(x)
+ down    no    up 
+ 1059 28863   853 
+</pre>
+
+<h1 id="专题5-2-循环语句"><a href="#专题5-2-循环语句" class="headerlink" title="专题5.2.循环语句"></a>专题5.2.循环语句</h1><p><img src="http://cdn.rjny.icu/ggplot3/002.JPG" alt="ggplot-1"></p>
+<pre>
+for(i in x){
+CODE
+}
+#将结果保存
+x <- c(5,6,0,3)
+s = 0
+result = list()
+for(i in 1:length(x)){
+  s=s+x[[i]]
+  result[[i]] = c(x[[i]],s)
+}
+result
+do.call(cbind,result)
+do.call(rbind,result)
+</pre>
+
+<h1 id="专题6-隐性循环"><a href="#专题6-隐性循环" class="headerlink" title="专题6.隐性循环"></a>专题6.隐性循环</h1><pre>
+apply(x,MARGIN,FUN,...) # MARGIN 1表示行，2表示列
+apply(test,2,mean)  # 对test 每一列取平均值
+</pre>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-14T15:36:21+08:00"
-              content="2022-03-14">
-          03-14
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E4%BF%A1/" rel="tag"># 生信</a>
+              <a href="/tags/R/" rel="tag"># R</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/14/bio-study3/" itemprop="url">
-            <span itemprop="name">生信学习笔记03——绘图相关</span>
-          </a>
-      </div>
+        
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-13T00:36:21+08:00"
-              content="2022-03-13">
-          03-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/13/bio-study2/" itemprop="url">
-            <span itemprop="name">生信学习笔记02——ggplot绘图(2)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-12T00:36:21+08:00"
-              content="2022-03-12">
-          03-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/12/bio-study1/" itemprop="url">
-            <span itemprop="name">生信学习笔记01——ggplot绘图(1)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/15/bio-study4/" rel="prev" title="生信学习笔记04——R语言综合(1)">
+      <i class="fa fa-chevron-left"></i> 生信学习笔记04——R语言综合(1)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/15/bio-studyx/" rel="next" title="生信学习笔记番外——学员考试题">
+      生信学习笔记番外——学员考试题 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
-  </div>
+      </footer>
+    
+  </article>
   
   
-  
-
   
 
 
@@ -292,6 +395,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%93%E9%A2%984-%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">专题4.字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%93%E9%A2%985-1-%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">2.</span> <span class="nav-text">专题5.1.条件语句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E4%BD%9C%E4%B8%9A"><span class="nav-number">2.1.</span> <span class="nav-text">小作业</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%93%E9%A2%985-2-%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.</span> <span class="nav-text">专题5.2.循环语句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%93%E9%A2%986-%E9%9A%90%E6%80%A7%E5%BE%AA%E7%8E%AF"><span class="nav-number">4.</span> <span class="nav-text">专题6.隐性循环</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -21,15 +21,26 @@
   </script>
 
 <link rel="stylesheet" href="/js/prism/prism.css">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Dr Fan&#39;s">
-<meta property="og:url" content="http://blog.rjny.icu/tags/ggplot/index.html">
+  <meta name="description" content="优秀学员考试题题目1使用循环，对iris的1到4列分别画点图（用基础包画图函数plot）  ##先用第一列画一下，基本形状对了，根据第5列再加入颜色  plot(iris[,1],col &#x3D; iris[,5])   ##开始写循环，1到4共循环4次  x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生信学习笔记番外——学员考试题">
+<meta property="og:url" content="http://blog.rjny.icu/2022/03/15/bio-studyx/index.html">
 <meta property="og:site_name" content="Dr Fan&#39;s">
+<meta property="og:description" content="优秀学员考试题题目1使用循环，对iris的1到4列分别画点图（用基础包画图函数plot）  ##先用第一列画一下，基本形状对了，根据第5列再加入颜色  plot(iris[,1],col &#x3D; iris[,5])   ##开始写循环，1到4共循环4次  x">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://cdn.rjny.icu/ggplot3/zuoye.png">
+<meta property="og:image" content="http://cdn.rjny.icu/ggplot3/zuoye3.png">
+<meta property="og:image" content="http://cdn.rjny.icu/ggplot3/z1.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/ggplot3/z2.JPG">
+<meta property="article:published_time" content="2022-03-15T02:36:21.000Z">
+<meta property="article:modified_time" content="2022-03-19T07:02:48.869Z">
 <meta property="article:author" content="Chenyu Fan">
+<meta property="article:tag" content="生信">
+<meta property="article:tag" content="R">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.rjny.icu/ggplot3/zuoye.png">
 
-<link rel="canonical" href="http://blog.rjny.icu/tags/ggplot/">
+<link rel="canonical" href="http://blog.rjny.icu/2022/03/15/bio-studyx/">
 
 
 <script id="page-configurations">
@@ -37,12 +48,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Tag: ggplot | Dr Fan's</title>
+  <title>生信学习笔记番外——学员考试题 | Dr Fan's</title>
   
 
 
@@ -155,91 +166,177 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">ggplot
-          <small>Tag</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-studyx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          生信学习笔记番外——学员考试题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-15 10:36:21" itemprop="dateCreated datePublished" datetime="2022-03-15T10:36:21+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-19 15:02:48" itemprop="dateModified" datetime="2022-03-19T15:02:48+08:00">2022-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+        <h1 id="优秀学员考试题"><a href="#优秀学员考试题" class="headerlink" title="优秀学员考试题"></a>优秀学员考试题</h1><h2 id="题目1"><a href="#题目1" class="headerlink" title="题目1"></a>题目1</h2><p><strong>使用循环，对iris的1到4列分别画点图（用基础包画图函数plot）</strong></p>
+<pre>
+##先用第一列画一下，基本形状对了，根据第5列再加入颜色
+ plot(iris[,1],col = iris[,5])  
+##开始写循环，1到4共循环4次
+ x <-c(1:4)   #设置一个向量
+ for (i in x) {
+ plot(iris[,i],col = iris[,5])
+ }
+##运行后发现一个问题，4张图都堆叠在一起，查阅plot函数小图拼贴的方法后修改
+ par(mfrow=c(2,2)) #画的图以2行2列展示
+ x <-c(1:4)
+ png("zuoye.png")
+ par(mfrow=c(2,2))
+ for (i in x) {
+ plot(data[,i],col = data[,5])
+ }
+ dev.off()
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/zuoye.png" alt="ggplot-1"></p>
+<p>可以看到非常丑，根据给出的示例图片进行美（chou）化（hua）</p>
+<pre>
+x <-c(1:4)
+png("zuoye.png",width = 800, height = 400)
+par(mfrow=c(2,2))
+for (i in x) {
+plot(data[,i],col = data[,5],pch = 16)
+}
+dev.off()
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/zuoye3.png" alt="ggplot-1"></p>
+<h2 id="题目2"><a href="#题目2" class="headerlink" title="题目2"></a>题目2</h2><p><strong>生成一个随机数（rnorm）组成的10行6列的矩阵，列名为sample1，sample2….sample6，行名为gene1，gene2…gene10，分组为sample1、2、3属于A组，sample4、5、6属于B组。用循环对每个基因画ggplot2箱线图，并拼图(禁止使用宽变长)。</strong></p>
+<pre>
+##构建随机矩阵
+ set.seed(2022)
+ data <-matrix(rnorm(60),nrow=10)   #10行
+ colnames(data)<- paste0("sample",c(1:6))  
+ rownames(data)<- paste0("gene",c(1:10))  
+ data = data.frame(t(data)) #将矩阵转换为数据框，否则下一步报错
+ data$group <- c("A组","A组","A组","B组","B组","B组")
+</pre>
+<pre>
+##老样子写循环前试一下gene1能不能走通
+ ggplot(data = data,mapping = aes(x = group, y = data[,1]))+
+   geom_boxplot(mapping = aes(fill = group))
+##循环
+ for(i in 1:10){
+ ggplot(data = data,mapping = aes(x = group, y = data[,i]))+
+  geom_boxplot(mapping = aes(fill = group)) 
+ }
+#这里有个问题，plot中的拼接函数在ggplot中不管用，那就准备每个循环中生成一个变量，最后用patchwork去拼接
+ result = list() #存放结果
+ for(i in 1:10){
+ result[[i]] = ggplot(data = data,mapping = aes(x = group, y = data[,[i]]))+
+  geom_boxplot(mapping = aes(fill = group)) 
+ }
+#开始拼接图
+ library(patchwork)
+ result[[1]]+result[[2]]+result[[3]]+result[[4]]+result[[5]]+
+ result[[6]]+result[[7]]+result[[8]]+result[[9]]+result[[10]]+
+ plot_layout(nrow = 2)  #设置两行，代码看着很笨重，但没什么优化的思路
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/z1.JPG" alt="ggplot-1"></p>
+<pre>
+这里发现一个问题，10张图都是一样的，到底是哪里出了问题
+##手动替换i为1，2，3,生成的图都是不同,主体应该没问题
+##改为i in 8:10，发现图也没有变化，说明i 这个变量在循环中直接当成i这字母而非变量
+##猜测aes只能接受固定变量名，遂百度寻找新的函数
+##aes()需要填入变量名；字符向量的循环，aes_string函数可以将字符变量映射为ggplot所需的输入参数
+for(i in 1:10){
+  result[[i]] = ggplot(data = data,aes_string(x = "group",y=colnames(data)[i]))+
+    geom_boxplot(aes(fill = group))+
+    theme_bw()
+}
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/z2.JPG" alt="ggplot-1"><br>看了答案以后学了一种更加简便的拼图方式</p>
+<pre>
+wrap_plots(result,nrow = 2,guides = "collect")
+</pre>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-14T15:36:21+08:00"
-              content="2022-03-14">
-          03-14
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E4%BF%A1/" rel="tag"># 生信</a>
+              <a href="/tags/R/" rel="tag"># R</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/14/bio-study3/" itemprop="url">
-            <span itemprop="name">生信学习笔记03——绘图相关</span>
-          </a>
-      </div>
+        
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-13T00:36:21+08:00"
-              content="2022-03-13">
-          03-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/13/bio-study2/" itemprop="url">
-            <span itemprop="name">生信学习笔记02——ggplot绘图(2)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-12T00:36:21+08:00"
-              content="2022-03-12">
-          03-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/12/bio-study1/" itemprop="url">
-            <span itemprop="name">生信学习笔记01——ggplot绘图(1)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/15/bio-study5/" rel="prev" title="生信学习笔记05——R语言综合(2)">
+      <i class="fa fa-chevron-left"></i> 生信学习笔记05——R语言综合(2)
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-  </div>
+      </footer>
+    
+  </article>
   
   
-  
-
   
 
 
@@ -292,6 +389,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E7%A7%80%E5%AD%A6%E5%91%98%E8%80%83%E8%AF%95%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">优秀学员考试题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE1"><span class="nav-number">1.1.</span> <span class="nav-text">题目1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE2"><span class="nav-number">1.2.</span> <span class="nav-text">题目2</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

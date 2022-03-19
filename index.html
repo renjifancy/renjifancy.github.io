@@ -161,6 +161,322 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-studyx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/15/bio-studyx/" class="post-title-link" itemprop="url">生信学习笔记番外——学员考试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-15 10:36:21" itemprop="dateCreated datePublished" datetime="2022-03-15T10:36:21+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-19 15:02:48" itemprop="dateModified" datetime="2022-03-19T15:02:48+08:00">2022-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="优秀学员考试题"><a href="#优秀学员考试题" class="headerlink" title="优秀学员考试题"></a>优秀学员考试题</h1><h2 id="题目1"><a href="#题目1" class="headerlink" title="题目1"></a>题目1</h2><p><strong>使用循环，对iris的1到4列分别画点图（用基础包画图函数plot）</strong></p>
+<pre>
+##先用第一列画一下，基本形状对了，根据第5列再加入颜色
+ plot(iris[,1],col = iris[,5])  
+##开始写循环，1到4共循环4次
+ x <-c(1:4)   #设置一个向量
+ for (i in x) {
+ plot(iris[,i],col = iris[,5])
+ }
+##运行后发现一个问题，4张图都堆叠在一起，查阅plot函数小图拼贴的方法后修改
+ par(mfrow=c(2,2)) #画的图以2行2列展示
+ x <-c(1:4)
+ png("zuoye.png")
+ par(mfrow=c(2,2))
+ for (i in x) {
+ plot(data[,i],col = data[,5])
+ }
+ dev.off()
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/zuoye.png" alt="ggplot-1"></p>
+<p>可以看到非常丑，根据给出的示例图片进行美（chou）化（hua）</p>
+<pre>
+x <-c(1:4)
+png("zuoye.png",width = 800, height = 400)
+par(mfrow=c(2,2))
+for (i in x) {
+plot(data[,i],col = data[,5],pch = 16)
+}
+dev.off()
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/zuoye3.png" alt="ggplot-1"></p>
+<h2 id="题目2"><a href="#题目2" class="headerlink" title="题目2"></a>题目2</h2><p><strong>生成一个随机数（rnorm）组成的10行6列的矩阵，列名为sample1，sample2….sample6，行名为gene1，gene2…gene10，分组为sample1、2、3属于A组，sample4、5、6属于B组。用循环对每个基因画ggplot2箱线图，并拼图(禁止使用宽变长)。</strong></p>
+<pre>
+##构建随机矩阵
+ set.seed(2022)
+ data <-matrix(rnorm(60),nrow=10)   #10行
+ colnames(data)<- paste0("sample",c(1:6))  
+ rownames(data)<- paste0("gene",c(1:10))  
+ data = data.frame(t(data)) #将矩阵转换为数据框，否则下一步报错
+ data$group <- c("A组","A组","A组","B组","B组","B组")
+</pre>
+<pre>
+##老样子写循环前试一下gene1能不能走通
+ ggplot(data = data,mapping = aes(x = group, y = data[,1]))+
+   geom_boxplot(mapping = aes(fill = group))
+##循环
+ for(i in 1:10){
+ ggplot(data = data,mapping = aes(x = group, y = data[,i]))+
+  geom_boxplot(mapping = aes(fill = group)) 
+ }
+#这里有个问题，plot中的拼接函数在ggplot中不管用，那就准备每个循环中生成一个变量，最后用patchwork去拼接
+ result = list() #存放结果
+ for(i in 1:10){
+ result[[i]] = ggplot(data = data,mapping = aes(x = group, y = data[,[i]]))+
+  geom_boxplot(mapping = aes(fill = group)) 
+ }
+#开始拼接图
+ library(patchwork)
+ result[[1]]+result[[2]]+result[[3]]+result[[4]]+result[[5]]+
+ result[[6]]+result[[7]]+result[[8]]+result[[9]]+result[[10]]+
+ plot_layout(nrow = 2)  #设置两行，代码看着很笨重，但没什么优化的思路
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/z1.JPG" alt="ggplot-1"></p>
+<pre>
+这里发现一个问题，10张图都是一样的，到底是哪里出了问题
+##手动替换i为1，2，3,生成的图都是不同,主体应该没问题
+##改为i in 8:10，发现图也没有变化，说明i 这个变量在循环中直接当成i这字母而非变量
+##猜测aes只能接受固定变量名，遂百度寻找新的函数
+##aes()需要填入变量名；字符向量的循环，aes_string函数可以将字符变量映射为ggplot所需的输入参数
+for(i in 1:10){
+  result[[i]] = ggplot(data = data,aes_string(x = "group",y=colnames(data)[i]))+
+    geom_boxplot(aes(fill = group))+
+    theme_bw()
+}
+</pre>
+
+<p><img src="http://cdn.rjny.icu/ggplot3/z2.JPG" alt="ggplot-1"><br>看了答案以后学了一种更加简便的拼图方式</p>
+<pre>
+wrap_plots(result,nrow = 2,guides = "collect")
+</pre>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-study5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/15/bio-study5/" class="post-title-link" itemprop="url">生信学习笔记05——R语言综合(2)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-15 09:36:21" itemprop="dateCreated datePublished" datetime="2022-03-15T09:36:21+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-19 11:46:18" itemprop="dateModified" datetime="2022-03-19T11:46:18+08:00">2022-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="专题4-字符串"><a href="#专题4-字符串" class="headerlink" title="专题4.字符串"></a>专题4.字符串</h1><p><strong>字符串长度 str_length</strong></p>
+<pre>
+str_length(x)  #空格也算
+</pre>
+
+<p><strong>字符串拆分 str_split</strong></p>
+<pre>
+str_split(x," ") # 取出为列表
+str_split(x," ")[ [1] ] # 取出为向量
+</pre>
+
+<p><strong>按位置提取字符 str_sub</strong></p>
+<pre>
+str_sub(x,5,9) #5~9字字符
+</pre>
+
+<p><strong>字符检测 str_detect</strong></p>
+<pre>
+str_detect(x,"h")  #返回true or false
+str_starts
+srt_ends
+</pre>
+
+<p><strong>字符串替换str_replace</strong></p>
+<pre>
+str_replace(x,"","")
+str_replace_all 
+</pre>
+
+<p><strong>字符串删除str_remove</strong></p>
+<pre>
+str_remove(x,"")
+str_remove_all 
+</pre>
+
+<h1 id="专题5-1-条件语句"><a href="#专题5-1-条件语句" class="headerlink" title="专题5.1.条件语句"></a>专题5.1.条件语句</h1><pre>
+if (一个逻辑值){
+CODE1
+}else{
+CODE2
+}
+#ifelse函数
+ifelse(x,yes,no)
+ifelse(str_detect(x,"s"),"+","-") #联用可以用于分组
+</pre>
+
+<h2 id="小作业"><a href="#小作业" class="headerlink" title="小作业"></a>小作业</h2><pre>
+1.读取group数据,并从第二列中提取数据
+data<- read.csv("group.csv") #注意加双引号
+a<-str_split(data$title," ",simplify = T)[,4]
+data$group <- a
+2.把提取出的字符改为小写
+data$group <- tolower(data$group)
+3.加载deg.Rdata,根据a、b两列的值，按照以下条件生成向量x：
+a< -1 且b<0.05,则x对应的值为down；
+a>1 且b<0.05,则x对应的值为up；
+其他情况，x对应的值为no
+统计up、down、no各重复了多少次
+x<-ifelse(deg$a < -1  & deg$b < 0.05,"down",
+       (ifelse(deg$a > 1 & deg$b < 0.05,"up","no")))
+deg$x <- x
+table(x)
+ down    no    up 
+ 1059 28863   853 
+</pre>
+
+<h1 id="专题5-2-循环语句"><a href="#专题5-2-循环语句" class="headerlink" title="专题5.2.循环语句"></a>专题5.2.循环语句</h1><p><img src="http://cdn.rjny.icu/ggplot3/002.JPG" alt="ggplot-1"></p>
+<pre>
+for(i in x){
+CODE
+}
+#将结果保存
+x <- c(5,6,0,3)
+s = 0
+result = list()
+for(i in 1:length(x)){
+  s=s+x[[i]]
+  result[[i]] = c(x[[i]],s)
+}
+result
+do.call(cbind,result)
+do.call(rbind,result)
+</pre>
+
+<h1 id="专题6-隐性循环"><a href="#专题6-隐性循环" class="headerlink" title="专题6.隐性循环"></a>专题6.隐性循环</h1><pre>
+apply(x,MARGIN,FUN,...) # MARGIN 1表示行，2表示列
+apply(test,2,mean)  # 对test 每一列取平均值
+</pre>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-study4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -192,7 +508,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-18 23:52:06" itemprop="dateModified" datetime="2022-03-18T23:52:06+08:00">2022-03-18</time>
+                <time title="Modified: 2022-03-19 11:18:14" itemprop="dateModified" datetime="2022-03-19T11:18:14+08:00">2022-03-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -318,6 +634,7 @@ pdat = dat %>%
   names_to = "gene",
   values_to = "count") 
 </pre>
+
 <p><img src="http://cdn.rjny.icu/ggplot3/1.JPG" alt="ggplot-1"></p>
 <pre>
 library(ggplot2)
@@ -326,6 +643,7 @@ p = ggplot(pdat,aes(gene,count))+
   theme_bw()
 p + facet_wrap(~gene,scales = "free")
 </pre>
+
 <p><img src="http://cdn.rjny.icu/ggplot3/Rplot.png" alt="ggplot-1"></p>
 <h1 id="专题3-连接"><a href="#专题3-连接" class="headerlink" title="专题3.连接"></a>专题3.连接</h1><pre>
 library(dplyr)
@@ -722,7 +1040,7 @@ if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

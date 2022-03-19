@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://cdn.rjny.icu/ggplot3/1.JPG">
 <meta property="og:image" content="http://cdn.rjny.icu/ggplot3/Rplot.png">
 <meta property="article:published_time" content="2022-03-15T00:36:21.000Z">
-<meta property="article:modified_time" content="2022-03-18T15:52:06.910Z">
+<meta property="article:modified_time" content="2022-03-19T03:18:14.583Z">
 <meta property="article:author" content="Chenyu Fan">
 <meta property="article:tag" content="生信">
 <meta property="article:tag" content="R">
@@ -201,7 +201,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-18 23:52:06" itemprop="dateModified" datetime="2022-03-18T23:52:06+08:00">2022-03-18</time>
+                <time title="Modified: 2022-03-19 11:18:14" itemprop="dateModified" datetime="2022-03-19T11:18:14+08:00">2022-03-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -327,6 +327,7 @@ pdat = dat %>%
   names_to = "gene",
   values_to = "count") 
 </pre>
+
 <p><img src="http://cdn.rjny.icu/ggplot3/1.JPG" alt="ggplot-1"></p>
 <pre>
 library(ggplot2)
@@ -335,6 +336,7 @@ p = ggplot(pdat,aes(gene,count))+
   theme_bw()
 p + facet_wrap(~gene,scales = "free")
 </pre>
+
 <p><img src="http://cdn.rjny.icu/ggplot3/Rplot.png" alt="ggplot-1"></p>
 <h1 id="专题3-连接"><a href="#专题3-连接" class="headerlink" title="专题3.连接"></a>专题3.连接</h1><pre>
 library(dplyr)
@@ -367,7 +369,10 @@ anti_join(test1,test2,by="name")
     <a href="/2022/03/14/bio-study3/" rel="prev" title="生信学习笔记03——绘图相关">
       <i class="fa fa-chevron-left"></i> 生信学习笔记03——绘图相关
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/15/bio-study5/" rel="next" title="生信学习笔记05——R语言综合(2)">
+      生信学习笔记05——R语言综合(2) <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -442,7 +447,7 @@ anti_join(test1,test2,by="name")
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
