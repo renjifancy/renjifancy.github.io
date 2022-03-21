@@ -161,6 +161,236 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/21/r-study/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/21/r-study/" class="post-title-link" itemprop="url">条件logistic回归的R语言实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-21 18:00:00" itemprop="dateCreated datePublished" datetime="2022-03-21T18:00:00+08:00">2022-03-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-22 02:07:02" itemprop="dateModified" datetime="2022-03-22T02:07:02+08:00">2022-03-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">统计杂谈</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我师兄有篇文章用到了配对样本数据，审稿人要求使用条件logistic回归<strong>（conditional logistic regression analysis）</strong>，找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。</p>
+<h1 id="概念及实现方法"><a href="#概念及实现方法" class="headerlink" title="概念及实现方法"></a>概念及实现方法</h1><blockquote>
+<p>条件logistic回归是由Norman Breslow, Nicholas Day, Katherine Halvorsen, Ross L. Prentice和C. Sabai在1978年提出，是logistic回归的延伸，允许人们考虑到分层和匹配，通常用于具有特定条件或属性的病例受试者与没有该条件的n个对照受试者相匹配。</p>
+</blockquote>
+<p>原理部分不多赘述，我们只要知道当涉及到以下场景，出现了配对样本时，就需要考虑使用该统计学方法。</p>
+<p><strong>适用场景：</strong><br/><br>1、倾向性评分匹配后的分析<br/><br>2、巢式病例对照研究<br/><br>3、病例对照研究</p>
+<p><strong>实现方法：</strong><br/><br>有现成的R包函数可以使用，分别是‘Survival’包中的clogit()函数，及Epi包中的clogistic()函数实现，本文主要以Clogit来阐述。</p>
+<h1 id="clogit函数"><a href="#clogit函数" class="headerlink" title="clogit函数"></a>clogit函数</h1><p>阅读说明文档，该函数是专门用于Conditional logistic regression分析，有趣的是它计算也是基于cox回归的似然比分析，那说明基于SPSS的方法也是有道理的。</p>
+<blockquote>
+<p>  An object of class “clogit”, which is a wrapper for a “coxph” object.</p>
+</blockquote>
+<pre>
+clogit(formula, data, weights, subset, na.action,
+ method=c("exact", "approximate", "efron", "breslow"),
+ ...)
+</pre>
+
+<p><strong>变量说明</strong></p>
+<table border="1">
+  <tr> <th>formula</th><th>Model formula</th> </tr>
+  <tr> <th>data</th><th>data frame</th> </tr>
+  <tr> <th>weights</th><th>optional, names the variable containing case weights</th> </tr>
+  <tr> <th>subset</th><th>optional, subset the data</th> </tr>
+  <tr> <th>na.action</th><th>optional na.action argument. By default the global option na.action is used</th> </tr>
+  <tr> <th>method</th><th>use the correct (exact) calculation in the conditional likelihood or one of the approximations</th> </tr>
+</table>
+
+
+<h1 id="R语言实战"><a href="#R语言实战" class="headerlink" title="R语言实战"></a>R语言实战</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>采用survival包内自带的数据集lung (NCCTG Lung Cancer Data)</p>
+<pre>
+rm(list = ls())  #清空一下工作空间
+library(survival)
+data_lung<-survival::lung
+## 加入结局变量和分组信息
+outcome<- ifelse(data_lung$time <180,1,0)  #这里我们把180天内死亡设置为结局
+id<-rep(1:76,3)   #假装是1：2对照，生成1：76三次
+#id<-rep(1:76, each = 3) #另外一种方法
+data_lung$outcome<-outcome
+data_lung$id<-id
+#data_lung$outcome<-factor(data_lung$outcome) #这里千万不能将结局变量转化为因子，否则会运行报错
+clogit_full<-clogit(outcome ~ sex + strata(id),data =  data_lung)  #以性别为单变量做回归，strata(id)为输入配对编号的位置
+summary(clogit_full)
+</pre>
+<p>接着我们再用Logistic回归做一下性别的单变量回归</p>
+<pre>
+logistic_full<-glm(outcome~sex,data=data_lung,family = "binomial")
+summary(logistic_full)
+exp(coef(logistic_full)) 计算HR
+exp(confint(logistic_full)) 计算95%区间
+</pre>
+
+<h2 id="结果输出"><a href="#结果输出" class="headerlink" title="结果输出"></a>结果输出</h2><h3 id="结果1-条件Logistic回归"><a href="#结果1-条件Logistic回归" class="headerlink" title="结果1~条件Logistic回归"></a>结果1~条件Logistic回归</h3><p><img src="http://cdn.rjny.icu/geo/7.JPG" alt="ggplot-1"><br>通过条件Logistic回归计算得出 0.617(0.299，1.274) p&#x3D;0.192 </br></p>
+<h3 id="结果2-Logistic回归"><a href="#结果2-Logistic回归" class="headerlink" title="结果2~Logistic回归"></a>结果2~Logistic回归</h3><pre>
+# 输出HR以及95%置信区间
+                2.5 %    97.5 %
+(Intercept) 0.4778247 2.6897932
+sex         0.2582867 0.8875878
+</pre>
+<p><img src="http://cdn.rjny.icu/geo/8.JPG" alt="ggplot-1"><br>如果不考虑到配对因素去回归得出0.486(0.258,0.887) p&#x3D;0.0214 *</br></p>
+<h3 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h3><p>这里得出这两个差异较大的结论，原因是我的配对分组比较随意，画出每个组的箱线图看出差异非常大，理想的是比较窄的箱线</p>
+<pre>
+library(ggplot2)
+data_lung$id<-factor(data_lung$id)   #id需要转化为因子
+ggplot(data = data_lung,mapping = aes(x = id, y = age))+
+  geom_boxplot()
+</pre>
+
+<p><img src="http://cdn.rjny.icu/geo/9.JPG" alt="ggplot-1"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/16/bio-study6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Chenyu Fan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dr Fan's">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/16/bio-study6/" class="post-title-link" itemprop="url">生信学习笔记06——GEO数据分析(1)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-03-16 09:00:00" itemprop="dateCreated datePublished" datetime="2022-03-16T09:00:00+08:00">2022-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-03-21 20:17:57" itemprop="dateModified" datetime="2022-03-21T20:17:57+08:00">2022-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E4%BF%A1%E9%A9%AC%E6%8B%89%E6%9D%BE/" itemprop="url" rel="index"><span itemprop="name">生信马拉松</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="补充基础知识"><a href="#补充基础知识" class="headerlink" title="补充基础知识"></a>补充基础知识</h1><h2 id="logFC"><a href="#logFC" class="headerlink" title="logFC"></a>logFC</h2><blockquote>
+<p>**FC(Foldchange):**处理组平均值&#x2F;对照组平均值<br /><br>**logFC:**Foldchange取log2</p>
+</blockquote>
+<p style="color: #FF0000;"><b>logFC基本都是个位数，一般作为横坐标出现在火山图中</b></p>
+
+<ul>
+<li>logFC&gt;0， treat&gt;control，基因表达量上升</li>
+<li>logFC&lt;0， treat&lt;control，基因表达量下降</li>
+<li>通常所说的上调、下调基因是指表达量显著上升&#x2F;下降的基因
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/16/bio-study6/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/15/bio-studyx/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -192,7 +422,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-19 15:02:48" itemprop="dateModified" datetime="2022-03-19T15:02:48+08:00">2022-03-19</time>
+                <time title="Modified: 2022-03-20 13:06:24" itemprop="dateModified" datetime="2022-03-20T13:06:24+08:00">2022-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,70 +464,14 @@
  }
  dev.off()
 </pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/zuoye.png" alt="ggplot-1"></p>
-<p>可以看到非常丑，根据给出的示例图片进行美（chou）化（hua）</p>
-<pre>
-x <-c(1:4)
-png("zuoye.png",width = 800, height = 400)
-par(mfrow=c(2,2))
-for (i in x) {
-plot(data[,i],col = data[,5],pch = 16)
-}
-dev.off()
-</pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/zuoye3.png" alt="ggplot-1"></p>
-<h2 id="题目2"><a href="#题目2" class="headerlink" title="题目2"></a>题目2</h2><p><strong>生成一个随机数（rnorm）组成的10行6列的矩阵，列名为sample1，sample2….sample6，行名为gene1，gene2…gene10，分组为sample1、2、3属于A组，sample4、5、6属于B组。用循环对每个基因画ggplot2箱线图，并拼图(禁止使用宽变长)。</strong></p>
-<pre>
-##构建随机矩阵
- set.seed(2022)
- data <-matrix(rnorm(60),nrow=10)   #10行
- colnames(data)<- paste0("sample",c(1:6))  
- rownames(data)<- paste0("gene",c(1:10))  
- data = data.frame(t(data)) #将矩阵转换为数据框，否则下一步报错
- data$group <- c("A组","A组","A组","B组","B组","B组")
-</pre>
-<pre>
-##老样子写循环前试一下gene1能不能走通
- ggplot(data = data,mapping = aes(x = group, y = data[,1]))+
-   geom_boxplot(mapping = aes(fill = group))
-##循环
- for(i in 1:10){
- ggplot(data = data,mapping = aes(x = group, y = data[,i]))+
-  geom_boxplot(mapping = aes(fill = group)) 
- }
-#这里有个问题，plot中的拼接函数在ggplot中不管用，那就准备每个循环中生成一个变量，最后用patchwork去拼接
- result = list() #存放结果
- for(i in 1:10){
- result[[i]] = ggplot(data = data,mapping = aes(x = group, y = data[,[i]]))+
-  geom_boxplot(mapping = aes(fill = group)) 
- }
-#开始拼接图
- library(patchwork)
- result[[1]]+result[[2]]+result[[3]]+result[[4]]+result[[5]]+
- result[[6]]+result[[7]]+result[[8]]+result[[9]]+result[[10]]+
- plot_layout(nrow = 2)  #设置两行，代码看着很笨重，但没什么优化的思路
-</pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/z1.JPG" alt="ggplot-1"></p>
-<pre>
-这里发现一个问题，10张图都是一样的，到底是哪里出了问题
-##手动替换i为1，2，3,生成的图都是不同,主体应该没问题
-##改为i in 8:10，发现图也没有变化，说明i 这个变量在循环中直接当成i这字母而非变量
-##猜测aes只能接受固定变量名，遂百度寻找新的函数
-##aes()需要填入变量名；字符向量的循环，aes_string函数可以将字符变量映射为ggplot所需的输入参数
-for(i in 1:10){
-  result[[i]] = ggplot(data = data,aes_string(x = "group",y=colnames(data)[i]))+
-    geom_boxplot(aes(fill = group))+
-    theme_bw()
-}
-</pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/z2.JPG" alt="ggplot-1"><br>看了答案以后学了一种更加简便的拼图方式</p>
-<pre>
-wrap_plots(result,nrow = 2,guides = "collect")
-</pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/15/bio-studyx/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -347,7 +521,7 @@ wrap_plots(result,nrow = 2,guides = "collect")
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-19 11:46:18" itemprop="dateModified" datetime="2022-03-19T11:46:18+08:00">2022-03-19</time>
+                <time title="Modified: 2022-03-20 13:07:19" itemprop="dateModified" datetime="2022-03-20T13:07:19+08:00">2022-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -380,85 +554,14 @@ str_length(x)  #空格也算
 str_split(x," ") # 取出为列表
 str_split(x," ")[ [1] ] # 取出为向量
 </pre>
-
-<p><strong>按位置提取字符 str_sub</strong></p>
-<pre>
-str_sub(x,5,9) #5~9字字符
-</pre>
-
-<p><strong>字符检测 str_detect</strong></p>
-<pre>
-str_detect(x,"h")  #返回true or false
-str_starts
-srt_ends
-</pre>
-
-<p><strong>字符串替换str_replace</strong></p>
-<pre>
-str_replace(x,"","")
-str_replace_all 
-</pre>
-
-<p><strong>字符串删除str_remove</strong></p>
-<pre>
-str_remove(x,"")
-str_remove_all 
-</pre>
-
-<h1 id="专题5-1-条件语句"><a href="#专题5-1-条件语句" class="headerlink" title="专题5.1.条件语句"></a>专题5.1.条件语句</h1><pre>
-if (一个逻辑值){
-CODE1
-}else{
-CODE2
-}
-#ifelse函数
-ifelse(x,yes,no)
-ifelse(str_detect(x,"s"),"+","-") #联用可以用于分组
-</pre>
-
-<h2 id="小作业"><a href="#小作业" class="headerlink" title="小作业"></a>小作业</h2><pre>
-1.读取group数据,并从第二列中提取数据
-data<- read.csv("group.csv") #注意加双引号
-a<-str_split(data$title," ",simplify = T)[,4]
-data$group <- a
-2.把提取出的字符改为小写
-data$group <- tolower(data$group)
-3.加载deg.Rdata,根据a、b两列的值，按照以下条件生成向量x：
-a< -1 且b<0.05,则x对应的值为down；
-a>1 且b<0.05,则x对应的值为up；
-其他情况，x对应的值为no
-统计up、down、no各重复了多少次
-x<-ifelse(deg$a < -1  & deg$b < 0.05,"down",
-       (ifelse(deg$a > 1 & deg$b < 0.05,"up","no")))
-deg$x <- x
-table(x)
- down    no    up 
- 1059 28863   853 
-</pre>
-
-<h1 id="专题5-2-循环语句"><a href="#专题5-2-循环语句" class="headerlink" title="专题5.2.循环语句"></a>专题5.2.循环语句</h1><p><img src="http://cdn.rjny.icu/ggplot3/002.JPG" alt="ggplot-1"></p>
-<pre>
-for(i in x){
-CODE
-}
-#将结果保存
-x <- c(5,6,0,3)
-s = 0
-result = list()
-for(i in 1:length(x)){
-  s=s+x[[i]]
-  result[[i]] = c(x[[i]],s)
-}
-result
-do.call(cbind,result)
-do.call(rbind,result)
-</pre>
-
-<h1 id="专题6-隐性循环"><a href="#专题6-隐性循环" class="headerlink" title="专题6.隐性循环"></a>专题6.隐性循环</h1><pre>
-apply(x,MARGIN,FUN,...) # MARGIN 1表示行，2表示列
-apply(test,2,mean)  # 对test 每一列取平均值
-</pre>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/15/bio-study5/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -508,7 +611,7 @@ apply(test,2,mean)  # 对test 每一列取平均值
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-19 11:18:14" itemprop="dateModified" datetime="2022-03-19T11:18:14+08:00">2022-03-19</time>
+                <time title="Modified: 2022-03-20 13:06:44" itemprop="dateModified" datetime="2022-03-20T13:06:44+08:00">2022-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -544,117 +647,14 @@ library(stringr)
 library(tibble)
 </pre>
 <p>更换电脑时重新运行代码，发现R版本过期了，tidyr包需要R4.1.3以上，更新后无报错。</p>
-<h1 id="专题1-数据框操作"><a href="#专题1-数据框操作" class="headerlink" title="专题1.数据框操作"></a>专题1.数据框操作</h1><h2 id="order-函数用于排序"><a href="#order-函数用于排序" class="headerlink" title="order() 函数用于排序"></a>order() 函数用于排序</h2><p>准备一下样本数据</p>
-<pre>
-test <- iris[c(1:2,51:52,101:102),]    #根据行号抽取需要的数据
-rownames(test) =NULL  #将行号变量清空
-test
-</pre>
-<pre>
-  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-1          5.1         3.5          1.4         0.2     setosa
-2          4.9         3.0          1.4         0.2     setosa
-3          7.0         3.2          4.7         1.4 versicolor
-4          6.4         3.2          4.5         1.5 versicolor
-5          6.3         3.3          6.0         2.5  virginica
-6          5.8         2.7          5.1         1.9  virginica
-</pre>
-<pre>
-order(test$Sepal.Length) #根据第一列排序
-test[order(test$Sepal.Length),] #根据排序结果取出数据，升序
-test[order(test$Sepal.Length,decreasing = T),]  降序
-</pre>
-<pre>
-  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-2          4.9         3.0          1.4         0.2     setosa
-1          5.1         3.5          1.4         0.2     setosa
-6          5.8         2.7          5.1         1.9  virginica
-5          6.3         3.3          6.0         2.5  virginica
-4          6.4         3.2          4.5         1.5 versicolor
-3          7.0         3.2          4.7         1.4 versicolor
-</pre>
-
-<h2 id="arrange-函数排序"><a href="#arrange-函数排序" class="headerlink" title="arrange() 函数排序"></a>arrange() 函数排序</h2><p>普通排序</p>
-<pre>
-arrange(test,Sepal.Length) #升序
-arrange(test,desc(Sepal.Length)) #降序
-</pre>
-<p>按照A列排序，如果A列相同，按照B列排序</p>
-<pre>
-arrange(test,Sepal.Length, Sepal.Width)  #length为A列，Width为B列
-</pre>
-
-<h2 id="mutate-函数新增列"><a href="#mutate-函数新增列" class="headerlink" title="mutate() 函数新增列"></a>mutate() 函数新增列</h2><p>需重新定赋值原本变量，否则无改变</p>
-<pre>
-#两种方式赋值新的一列
-test <- mutate(test,new= test$Sepal.Length* test$Sepal.Width)
-test$new <- test$Sepal.Length* test$Sepal.Width 
-</pre>
-
-<h2 id="select-和-filter-筛选函数"><a href="#select-和-filter-筛选函数" class="headerlink" title="select() 和 filter() 筛选函数"></a>select() 和 filter() 筛选函数</h2><p>优秀的管道符号</p>
-<pre>
-x1 = filter (iris,Sepal.Width >3)
-x2 = select (x1,c("Sepal.Length","Sepal.Width"))
-x3 = arrange(x2,Sepal.Length)
-# 加入管道符号连接，理解为向后传递
-x = iris %>%
-   filter (Sepal.Width >3) %>%
-   select (c("Sepal.Length","Sepal.Width")) %>%
-   arrange(Sepal.Length)
-</pre>
-
-<h1 id="专题2-表达矩阵画箱线图"><a href="#专题2-表达矩阵画箱线图" class="headerlink" title="专题2.表达矩阵画箱线图"></a>专题2.表达矩阵画箱线图</h1><p>生成一个固定不变的矩阵，做一些微调</p>
-<pre>
-set.seed(10086)
-exp = matrix(rnorm(18),ncol = 6)
-exp = round(exp,2)  # 取几位小数
-rownames(exp) = paste0("gene",1:3)  #添加行名
-colnames(exp) = paste0("test",1:6) #添加列名
-exp[,1:3] = exp[,1:3]+1 #给前三列+1
-exp
-</pre>
-<pre>
-      test1 test2 test3 test4 test5 test6
-gene1  1.55  1.49  1.80 -0.37 -1.82 -1.62
-gene2 -1.74  0.37  2.08  2.11 -0.22  1.42
-gene3  1.57  1.25  1.32  2.49  0.58 -0.81
-</pre>
-
-<pre>
-library(tidyr)
-library(tibble)
-library(dplyr)
-dat = t(exp) %>% 
-  as.data.frame() %>% 
-  rownames_to_column() %>% 
-  mutate(group = rep(c("control","treat"),each = 3))
-#增长
-pdat = dat %>% 
-  pivot_longer(cols = starts_with("gene")
-  names_to = "gene",
-  values_to = "count") 
-</pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/1.JPG" alt="ggplot-1"></p>
-<pre>
-library(ggplot2)
-p = ggplot(pdat,aes(gene,count))+
-  geom_boxplot(aes(fill = group))+
-  theme_bw()
-p + facet_wrap(~gene,scales = "free")
-</pre>
-
-<p><img src="http://cdn.rjny.icu/ggplot3/Rplot.png" alt="ggplot-1"></p>
-<h1 id="专题3-连接"><a href="#专题3-连接" class="headerlink" title="专题3.连接"></a>专题3.连接</h1><pre>
-library(dplyr)
-inner_join(test1,test2,by="name")
-right_join(test1,test2,by="name")
-full_join(test1,test2,by="name")  #全连接，取全集
-semi_join(test1,test2,by="name")
-anti_join(test1,test2,by="name")
-</pre>
-
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/15/bio-study4/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -704,7 +704,7 @@ anti_join(test1,test2,by="name")
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-17 22:21:11" itemprop="dateModified" datetime="2022-03-17T22:21:11+08:00">2022-03-17</time>
+                <time title="Modified: 2022-03-20 13:07:01" itemprop="dateModified" datetime="2022-03-20T13:07:01+08:00">2022-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -728,54 +728,14 @@ anti_join(test1,test2,by="name")
 
       
           <h1 id="ggpubr的应用"><a href="#ggpubr的应用" class="headerlink" title="ggpubr的应用"></a>ggpubr的应用</h1><p>举例-箱线图中加入统计计算</p>
-<pre>
-library(ggpubr)
-ggscatter(iris,x="Sepal.Length",
-          y="Petal.Length",
-          color="Species")
-
-p <- ggboxplot(iris, x = "Species", 
-               y = "Sepal.Length",
-               color = "Species", 
-               shape = "Species",
-               add = "jitter")
-p
-my_comparisons <- list( c("setosa", "versicolor"), 
-                        c("setosa", "virginica"), 
-                        c("versicolor", "virginica") )
-p + stat_compare_means(comparisons = my_comparisons)+ # Add pairwise comparisons p-value
-  stat_compare_means(label.y = 9)
-</pre> 
-<p><img src="http://cdn.rjny.icu/ggplot3/Rplot01.png" alt="ggplot-1"></p>
-<p>STHDA网站上也有丰富的绘图样本及代码</p>
-<h1 id="图片保存"><a href="#图片保存" class="headerlink" title="图片保存"></a>图片保存</h1><pre>
-#ggplot2 保存方法
-ggsave(p,filename = "iris_box_ggpubr.png")
-
-#三段保存
-pdf("x.pdf")
-boxplot(iris[,1]~iris[,5])
-text(6.5,4, labels = 'hello')
-dev.off()  #关闭画板
-
-#eoffice包
-library(eoffice)
-topptx(p,"iris_box_ggpubr.pptx")
-</pre> 
-
-<h1 id="图片拼接–patchwork"><a href="#图片拼接–patchwork" class="headerlink" title="图片拼接–patchwork"></a>图片拼接–patchwork</h1><pre>
-library(ggplot2)
-library(patchwork)
-p1 <- ggplot(mpg) + 
-  geom_point(aes(hwy, displ))
-p2 <- ggplot(mpg) + 
-  geom_bar(aes(manufacturer, fill = stat(count))) + 
-  coord_flip()
-p1 + p2
-p1 / p2
-</pre>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/p7LLLvzR5LPgHhuRGhYQBQ">patchwork包的更多信息</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/14/bio-study3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1040,20 +1000,20 @@ if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

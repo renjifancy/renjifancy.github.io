@@ -21,26 +21,27 @@
   </script>
 
 <link rel="stylesheet" href="/js/prism/prism.css">
-  <meta name="description" content="从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高  准备工作#设置清华镜像 options(&quot;repos&quot;&#x3D;c(CRAN&#x3D;&quot;http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;CRAN&#x2F;&quot;)  #安装R包 if(!require(ggplot2))install.packages(&#39;ggplot2&#39;,update &#x3D; F,ask &#x3D; F) if(!requir">
+  <meta name="description" content="补充基础知识logFC **FC(Foldchange):**处理组平均值&#x2F;对照组平均值**logFC:**Foldchange取log2  logFC基本都是个位数，一般作为横坐标出现在火山图中   logFC&gt;0， treat&gt;control，基因表达量上升 logFC&lt;0， treat&lt;control，基因表达量下降 通常所说的上调、下调基因是指表达量显著上">
 <meta property="og:type" content="article">
-<meta property="og:title" content="生信学习笔记01——ggplot绘图(1)">
-<meta property="og:url" content="http://blog.rjny.icu/2022/03/12/bio-study1/index.html">
+<meta property="og:title" content="生信学习笔记06——GEO数据分析(1)">
+<meta property="og:url" content="http://blog.rjny.icu/2022/03/16/bio-study6/index.html">
 <meta property="og:site_name" content="Dr Fan&#39;s">
-<meta property="og:description" content="从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高  准备工作#设置清华镜像 options(&quot;repos&quot;&#x3D;c(CRAN&#x3D;&quot;http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;CRAN&#x2F;&quot;)  #安装R包 if(!require(ggplot2))install.packages(&#39;ggplot2&#39;,update &#x3D; F,ask &#x3D; F) if(!requir">
+<meta property="og:description" content="补充基础知识logFC **FC(Foldchange):**处理组平均值&#x2F;对照组平均值**logFC:**Foldchange取log2  logFC基本都是个位数，一般作为横坐标出现在火山图中   logFC&gt;0， treat&gt;control，基因表达量上升 logFC&lt;0， treat&lt;control，基因表达量下降 通常所说的上调、下调基因是指表达量显著上">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png">
-<meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot.png">
-<meta property="og:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot01.png">
-<meta property="article:published_time" content="2022-03-11T16:36:21.000Z">
-<meta property="article:modified_time" content="2022-03-17T13:01:38.756Z">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/2.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/3.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/5.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/6.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/4.JPG">
+<meta property="article:published_time" content="2022-03-16T01:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-21T12:17:57.607Z">
 <meta property="article:author" content="Chenyu Fan">
-<meta property="article:tag" content="ggplot">
 <meta property="article:tag" content="生信">
-<meta property="article:tag" content="绘图">
+<meta property="article:tag" content="GEO">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png">
+<meta name="twitter:image" content="http://cdn.rjny.icu/geo/2.JPG">
 
-<link rel="canonical" href="http://blog.rjny.icu/2022/03/12/bio-study1/">
+<link rel="canonical" href="http://blog.rjny.icu/2022/03/16/bio-study6/">
 
 
 <script id="page-configurations">
@@ -53,7 +54,7 @@
   };
 </script>
 
-  <title>生信学习笔记01——ggplot绘图(1) | Dr Fan's</title>
+  <title>生信学习笔记06——GEO数据分析(1) | Dr Fan's</title>
   
 
 
@@ -173,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/12/bio-study1/">
+    <link itemprop="mainEntityOfPage" href="http://blog.rjny.icu/2022/03/16/bio-study6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpg">
@@ -186,7 +187,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          生信学习笔记01——ggplot绘图(1)
+          生信学习笔记06——GEO数据分析(1)
         </h1>
 
         <div class="post-meta">
@@ -196,14 +197,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2022-03-12 00:36:21" itemprop="dateCreated datePublished" datetime="2022-03-12T00:36:21+08:00">2022-03-12</time>
+              <time title="Created: 2022-03-16 09:00:00" itemprop="dateCreated datePublished" datetime="2022-03-16T09:00:00+08:00">2022-03-16</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-17 21:01:38" itemprop="dateModified" datetime="2022-03-17T21:01:38+08:00">2022-03-17</time>
+                <time title="Modified: 2022-03-21 20:17:57" itemprop="dateModified" datetime="2022-03-21T20:17:57+08:00">2022-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,126 +227,120 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>从头开始学一遍生信基础知识，记录一下过程，希望和看到的你一起提高</p>
+        <h1 id="补充基础知识"><a href="#补充基础知识" class="headerlink" title="补充基础知识"></a>补充基础知识</h1><h2 id="logFC"><a href="#logFC" class="headerlink" title="logFC"></a>logFC</h2><blockquote>
+<p>**FC(Foldchange):**处理组平均值&#x2F;对照组平均值<br /><br>**logFC:**Foldchange取log2</p>
 </blockquote>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><pre>#设置清华镜像
-options("repos"=c(CRAN="http://mirrors.tuna.tsinghua.edu.cn/CRAN/")
-</pre>
-<pre>#安装R包
-if(!require(ggplot2))install.packages('ggplot2',update = F,ask = F)
-if(!require(ggpubr))install.packages('ggpubr',update = F,ask = F)
-if(!require(eoffice))install.packages("eoffice",update = F,ask = F)
-if(!require(patchwork))install.packages("patchwork",update = F,ask = F)</pre>
-<span id="more"></span>
-<p>出现了一个报错，发现是一个<strong>rlang</strong>的包版本不对，重新安装后顺利加载</p>
-<pre>
-# Error: package or namespace load failed for ‘eoffice’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
- 载入了名字空间‘rlang’ 0.4.12，但需要的是>= 1.0.1
-install.packages("rlang")
-</pre>
+<p style="color: #FF0000;"><b>logFC基本都是个位数，一般作为横坐标出现在火山图中</b></p>
 
-<h1 id="绘图"><a href="#绘图" class="headerlink" title="绘图"></a>绘图</h1><p>绘图函数可以分为高级和低级绘图函数，互为补充</p>
 <ul>
-<li>plot</li>
-<li>ggplot</li>
-<li>ggpubr（美化版本）</li>
+<li>logFC&gt;0， treat&gt;control，基因表达量上升</li>
+<li>logFC&lt;0， treat&lt;control，基因表达量下降</li>
+<li>通常所说的上调、下调基因是指表达量显著上升&#x2F;下降的基因<span id="more"></span></li>
 </ul>
-<h2 id="入门级绘图模板"><a href="#入门级绘图模板" class="headerlink" title="入门级绘图模板"></a>入门级绘图模板</h2><p> 基本格式如下所示，展示内置的<strong>iris</strong>数据中，绘制以xy参数的散点图</p>
-<pre>ggplot(data = iris)+
-  geom_point(mapping = aes(x = Sepal.Length,
-                           y = Petal.Length))  
+<p><img src="http://cdn.rjny.icu/geo/2.JPG" alt="ggplot-1"></p>
+<h2 id="主成分分析（PCA）"><a href="#主成分分析（PCA）" class="headerlink" title="主成分分析（PCA）"></a>主成分分析（PCA）</h2><blockquote>
+<p>主成分分析，旨在利用<strong>降维</strong>的思想， 把多指标转化为少数几个综合指标（即主成分）。<br />根据这些主成分对样本进行聚类，代表样本的点在坐标轴上距离越远，说明样本差异越大。</p>
+</blockquote>
+<p>PCA只提供现象，无法解释现象发生的原因</p>
+<p><img src="http://cdn.rjny.icu/geo/3.JPG" alt="ggplot-1"></p>
+<h1 id="GEO数据实战"><a href="#GEO数据实战" class="headerlink" title="GEO数据实战"></a>GEO数据实战</h1><ul>
+<li>数据来源在GEO网页上可以看到，array和high throughput sequencing</li>
+<li>本次练习使用的数据均来自于<strong>芯片数据</strong>（array），不讨论转录组数据，注意甄别</li>
+</ul>
+<h2 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h2><p>本次练习用到的数据来自于GEO数据，GSE号码为GSE56649.</p>
+<blockquote>
+<p>Ye H, Zhang J, Wang J, Gao Y et al. CD4 T-cell transcriptome analysis reveals aberrant regulation of STAT3 and Wnt signaling pathways in rheumatoid arthritis: evidence from a case-control study. Arthritis Res Ther 2015 Mar 22;17:76. PMID: 25880754</p>
+</blockquote>
+<p>**类风湿关节炎(RA)**是一种全身性自身免疫性疾病，其潜在的分子机制尚不清楚。此前，CD4 t细胞芯片研究只关注关节炎患者。我们的目的是比较活跃的RA和健康对照组CD4 T细胞的分子谱。<br/><br>本次研究从13名活动的RA患者和9名健康个体中分离高度纯化的外周血CD4 T细胞，进行RNA提取和Affymetrix微阵列杂交。</p>
+<h2 id="数据获取"><a href="#数据获取" class="headerlink" title="数据获取"></a>数据获取</h2><pre>
+gse_number = "GSE56649"   #设置num
+eSet <- getGEO(gse_number, destdir = '.', getGPL = F) #下载数据至本地工作空间
+# 取列表中对象
+eSet = eSet[[1]]
+class(eSet)
+- [1] "ExpressionSet"
+-  attr(,"package")
+- [1] "Biobase"    
+# 提取矩阵数据
+exp <- exprs(eSet)    
 </pre>
 
-
-<h2 id="属性的设置"><a href="#属性的设置" class="headerlink" title="属性的设置"></a>属性的设置</h2><p>属性的设置需要设置为该类中有意义的值</p>
-<table border="1.5">
-  <tr> <th>属性</th><th>参数</th> </tr>
-  <tr> <th>颜色</th><th>color</th> </tr>
-  <tr> <th>大小</th><th>size</th> </tr>
-  <tr> <th>形状</th><th>shape</th> </tr>
-  <tr> <th>透明度</th><th>alpha</th> </tr>
-  <tr> <th>填充颜色</th><th>fill</th> </tr>
-</table>
-shape的形状如下所示，可以直接引用相关的数字
-
-<p><img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/ggplot2-shape-identity.png" alt="ggplot-shape"></p>
+<p>截取部分数据如下展示，列名为样本，行名为基因探针名字<br><img src="http://cdn.rjny.icu/geo/5.JPG" alt="ggplot-1"></p>
 <pre>
-#设置颜色为蓝色
-ggplot(data = iris) + 
-  geom_point(mapping = aes(x = Sepal.Length,
-                           y = Petal.Length), 
-             color = "blue")
-#继续调整点大小，透明度，形状
-ggplot(data = iris) + 
-  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length), 
-             size = 5,     # 点的大小5mm
-             alpha = 0.5,  # 透明度 50%
-             shape = 8)  # 点的形状
+#查看数据是否有缺失、错误、负值
+dim(exp)
+- [1] 54675    22
+#判断是否需要log处理值
+boxplot(exp) #生成箱线图
 </pre>
 
-<h2 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h2><p>按照数据框的某一列定义属性</p>
+<p>这是我们提取数据绘制的箱线图，可见箱子被压在底部<br><img src="http://cdn.rjny.icu/geo/6.JPG" alt="ggplot-1"><br><img src="http://cdn.rjny.icu/geo/4.JPG" alt="ggplot-1"></p>
 <pre>
-#注意在aes函数之内定义了颜色，参数是列名，而不是具体颜色
-ggplot(data = iris)+
-  geom_point(mapping = aes(x = Sepal.Length,
-                           y = Petal.Length,
-                           color = Species))
-#规定具体颜色
-+ scale_color_manual(values = c("blue","grey","red"))
+#将数据转换，约定俗成+1
+exp = log2(exp+1) 
+limma::normalizeBetweenArrays(exp) #如果存在很大的异常值，可以用该函数校正
 </pre>
-
-
-
-<h2 id="分面"><a href="#分面" class="headerlink" title="分面"></a>分面</h2><pre>
-#按照Species分成三个图并拼接
-ggplot(data = iris) + 
-  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) + 
-  facet_wrap(~ Species) 
-
-#双分面
-dat = iris
-dat$Group = sample(letters[1:5],150,replace = T)  #加入一个为group的列名
-#sample 抽样，letters是内置向量，选取前5个，replace=t为可放完的抽样
-ggplot(data = dat) + 
-  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) + 
-  facet_grid(Group ~ Species) 
-</pre>
-
-<h2 id="小作业"><a href="#小作业" class="headerlink" title="小作业"></a>小作业</h2><p>练习6.1</p>
 <pre>
-#1.根据给出数据，以AB为横纵坐标，change映射颜色，绘制散点图
-ggplot(data = test)+
-  geom_point(mapping = aes(x = a,
-                           y = b,
-                           color = change))
-#2.绘制蓝灰红色图
-ggplot(data = test)+
-  geom_point(mapping = aes(x = a,
-                           y = b,
-                           color = change))+
-  scale_color_manual(values = c("blue","grey","red")) 
-
-#如何根据变量自定义颜色
-1.查看所有变量名字
-unique(test$change)   #[1] "up"     "down"   "stable"
-2.定义每个变量的颜色
-uni_color = c("blue","grey","red")
-names(uni_color)= c("up","down","stable")
-uni_color 
---  up   down stable 
---"blue" "grey"  "red"
-3.重新绘制
-ggplot(data = test)+
-  geom_point(mapping = aes(x = a,
-                           y = b,
-                           color = change))+
-  scale_color_manual(values = uni_color)
+#提取临床信息
+pd <- pData(eSet) 
+#让exp列名与pd的行名顺序完全一致
+p = identical(rownames(pd),colnames(exp));p
+if(!p) exp = exp[,match(rownames(pd),colnames(exp))]
+#提取芯片平台编号
+gpl_number <- eSet@annotation;gpl_number
+save(gse_number,pd,exp,gpl_number,file = "step1output.Rdata") 保存数据提取第一步
 </pre>
-<figure class="two">
-  <img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot.png" width="350"/><img src="http://cdn.rjny.icu/%E5%9B%BE%E7%89%87/Rplot01.png" width="350"/>
-</figure>
 
+<h2 id="分组和探针注释"><a href="#分组和探针注释" class="headerlink" title="分组和探针注释"></a>分组和探针注释</h2><h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><pre>
+rm(list = ls())  
+load(file = "step1output.Rdata")
+library(stringr)
+#分组.1 截取关键词
+Group = pd$`disease state:ch1`
+#分组.2 自己设置
+Group = c(rep("RA",times=13),
+          rep("control",times=9))
+Group = rep(c("RA","control"),times = c(13,9))
+#分组.3 使用字符串的函数获取分组
+Group=ifelse(str_detect(pd$source_name_ch1,"control"),
+             "control",
+             "RA")
+# 将获取的分组变量，转化为factor变量，并且指定参考变量
+Group = factor(Group,levels = c("control","RA"))
+</pre>
+
+<h3 id="探针注释的获取"><a href="#探针注释的获取" class="headerlink" title="探针注释的获取"></a>探针注释的获取</h3><pre>
+#捷径
+library(tinyarray)
+find_anno(gpl_number)
+ids <- AnnoProbe::idmap('GPL570')
+#方法1 BioconductorR包(最常用)
+gpl_number 
+#http://www.bio-info-trainee.com/1399.html
+if(!require(hgu133plus2.db))BiocManager::install("hgu133plus2.db")
+library(hgu133plus2.db)
+ls("package:hgu133plus2.db")
+ids <- toTable(hgu133plus2SYMBOL)
+head(ids)
+# 方法2 读取GPL网页的表格文件，按列取子集
+##https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570
+if(F){
+  library(GEOquery)
+  #注：表格读取参数、文件列名不统一，活学活用，有的表格里没有symbol列，也有的GPL平台没有提供注释表格
+  b = read.table("GPL570-55999.txt",header = T,
+                 quote = "\"",sep = "\t",check.names = F)
+  colnames(b)
+  ids2 = b[,c("ID","Gene Symbol")]
+  colnames(ids2) = c("probe_id","symbol")
+  ids2 = ids2[ids2$symbol!="" & !str_detect(ids2$symbol,"///"),]
+}
+# 方法3 官网下载注释文件并读取
+##http://www.affymetrix.com/support/technical/byproduct.affx?product=hg-u133-plus
+# 方法4 自主注释 
+#https://mp.weixin.qq.com/s/mrtjpN8yDKUdCSvSUuUwcA
+save(exp,Group,ids,gse_number,file = "step2output.Rdata")
+
+</pre>
 
     </div>
 
@@ -355,9 +350,8 @@ ggplot(data = test)+
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/ggplot/" rel="tag"># ggplot</a>
               <a href="/tags/%E7%94%9F%E4%BF%A1/" rel="tag"># 生信</a>
-              <a href="/tags/%E7%BB%98%E5%9B%BE/" rel="tag"># 绘图</a>
+              <a href="/tags/GEO/" rel="tag"># GEO</a>
           </div>
 
         
@@ -365,10 +359,13 @@ ggplot(data = test)+
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/03/13/bio-study2/" rel="next" title="生信学习笔记02——ggplot绘图(2)">
-      生信学习笔记02——ggplot绘图(2) <i class="fa fa-chevron-right"></i>
+    <a href="/2022/03/15/bio-studyx/" rel="prev" title="生信学习笔记番外——学员考试题">
+      <i class="fa fa-chevron-left"></i> 生信学习笔记番外——学员考试题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/21/r-study/" rel="next" title="条件logistic回归的R语言实现">
+      条件logistic回归的R语言实现 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -428,7 +425,7 @@ ggplot(data = test)+
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%98%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">绘图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E7%BA%A7%E7%BB%98%E5%9B%BE%E6%A8%A1%E6%9D%BF"><span class="nav-number">2.1.</span> <span class="nav-text">入门级绘图模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">属性的设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%A0%E5%B0%84"><span class="nav-number">2.3.</span> <span class="nav-text">映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E9%9D%A2"><span class="nav-number">2.4.</span> <span class="nav-text">分面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E4%BD%9C%E4%B8%9A"><span class="nav-number">2.5.</span> <span class="nav-text">小作业</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">补充基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#logFC"><span class="nav-number">1.1.</span> <span class="nav-text">logFC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%EF%BC%88PCA%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">主成分分析（PCA）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GEO%E6%95%B0%E6%8D%AE%E5%AE%9E%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">GEO数据实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">2.1.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96"><span class="nav-number">2.2.</span> <span class="nav-text">数据获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%92%8C%E6%8E%A2%E9%92%88%E6%B3%A8%E9%87%8A"><span class="nav-number">2.3.</span> <span class="nav-text">分组和探针注释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84"><span class="nav-number">2.3.1.</span> <span class="nav-text">分组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A2%E9%92%88%E6%B3%A8%E9%87%8A%E7%9A%84%E8%8E%B7%E5%8F%96"><span class="nav-number">2.3.2.</span> <span class="nav-text">探针注释的获取</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
