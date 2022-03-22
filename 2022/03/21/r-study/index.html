@@ -21,18 +21,19 @@
   </script>
 
 <link rel="stylesheet" href="/js/prism/prism.css">
-  <meta name="description" content="我师兄有篇文章用到了配对样本数据，审稿人要求使用条件logistic回归（conditional logistic regression analysis），找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。 概念及实现方法 条件logistic回归是由Norman Breslow, Nicholas Day,">
+  <meta name="description" content="本文起因是我师兄有篇文章用到了配对样本数据，投稿后审稿人要求使用条件logistic回归（conditional logistic regression analysis），找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。  审稿人意见：Case-control study needs to be accou">
 <meta property="og:type" content="article">
 <meta property="og:title" content="条件logistic回归的R语言实现">
 <meta property="og:url" content="http://blog.rjny.icu/2022/03/21/r-study/index.html">
 <meta property="og:site_name" content="Dr Fan&#39;s">
-<meta property="og:description" content="我师兄有篇文章用到了配对样本数据，审稿人要求使用条件logistic回归（conditional logistic regression analysis），找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。 概念及实现方法 条件logistic回归是由Norman Breslow, Nicholas Day,">
+<meta property="og:description" content="本文起因是我师兄有篇文章用到了配对样本数据，投稿后审稿人要求使用条件logistic回归（conditional logistic regression analysis），找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。  审稿人意见：Case-control study needs to be accou">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://cdn.rjny.icu/geo/7.JPG">
 <meta property="og:image" content="http://cdn.rjny.icu/geo/8.JPG">
+<meta property="og:image" content="http://cdn.rjny.icu/geo/10.JPG">
 <meta property="og:image" content="http://cdn.rjny.icu/geo/9.JPG">
 <meta property="article:published_time" content="2022-03-21T10:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-21T18:07:02.000Z">
+<meta property="article:modified_time" content="2022-03-22T02:31:03.135Z">
 <meta property="article:author" content="Chenyu Fan">
 <meta property="article:tag" content="R">
 <meta property="article:tag" content="临床研究">
@@ -203,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-22 02:07:02" itemprop="dateModified" datetime="2022-03-22T02:07:02+08:00">2022-03-22</time>
+                <time title="Modified: 2022-03-22 10:31:03" itemprop="dateModified" datetime="2022-03-22T10:31:03+08:00">2022-03-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,18 +227,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>我师兄有篇文章用到了配对样本数据，审稿人要求使用条件logistic回归<strong>（conditional logistic regression analysis）</strong>，找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。</p>
+        <p>本文起因是我师兄有篇文章用到了配对样本数据，投稿后审稿人要求使用条件logistic回归<strong>（conditional logistic regression analysis）</strong>，找了一些资料发现没有比较好的教程，都是在spss中使用cox回归曲线救国实现的，于是就去学习了下条件logistic回归在R语言中的实现。</p>
+<blockquote>
+<p>审稿人意见：Case-control study needs to be accounted by means of a conditional logistic regression analysis (instead of “normal” logistic regression). There was no hint in the text, so in order to avoid any biased OR&#x2F;mean estimates from the models mentioned the authors are kindly asked to provide a bit more information on the methodological approach.</p>
+</blockquote>
 <h1 id="概念及实现方法"><a href="#概念及实现方法" class="headerlink" title="概念及实现方法"></a>概念及实现方法</h1><blockquote>
 <p>条件logistic回归是由Norman Breslow, Nicholas Day, Katherine Halvorsen, Ross L. Prentice和C. Sabai在1978年提出，是logistic回归的延伸，允许人们考虑到分层和匹配，通常用于具有特定条件或属性的病例受试者与没有该条件的n个对照受试者相匹配。</p>
 </blockquote>
-<p>原理部分不多赘述，我们只要知道当涉及到以下场景，出现了配对样本时，就需要考虑使用该统计学方法。</p>
-<p><strong>适用场景：</strong><br/><br>1、倾向性评分匹配后的分析<br/><br>2、巢式病例对照研究<br/><br>3、病例对照研究</p>
-<p><strong>实现方法：</strong><br/><br>有现成的R包函数可以使用，分别是‘Survival’包中的clogit()函数，及Epi包中的clogistic()函数实现，本文主要以Clogit来阐述。</p>
-<h1 id="clogit函数"><a href="#clogit函数" class="headerlink" title="clogit函数"></a>clogit函数</h1><p>阅读说明文档，该函数是专门用于Conditional logistic regression分析，有趣的是它计算也是基于cox回归的似然比分析，那说明基于SPSS的方法也是有道理的。</p>
+<span id="more"></span>
+<p>原理部分不多赘述，我们只要知道当涉及到以下场景，出现了配对样本时(无论是1:1,1:n)，都需要考虑使用该统计学方法。</p>
+<p><strong>适用场景：</strong><br>1、倾向性评分匹配后的分析<br>2、巢式病例对照研究<br>3、病例对照研究</p>
+<p><strong>实现方法：</strong><br>有现成的R包函数可以使用，分别是‘Survival’包中的clogit()函数，及Epi包中的clogistic()函数实现，本文主要以clogit来阐述。</p>
+<h1 id="clogit函数"><a href="#clogit函数" class="headerlink" title="clogit函数"></a>clogit函数</h1><p>阅读说明文档，该函数是专门用于Conditional logistic regression分析，有趣的是它计算也是基于cox回归的似然比分析，那说明前文提到的使用SPSS的方法也是有道理的。</p>
 <blockquote>
 <p>  An object of class “clogit”, which is a wrapper for a “coxph” object.</p>
 </blockquote>
 <pre>
+#函数基本格式
 clogit(formula, data, weights, subset, na.action,
  method=c("exact", "approximate", "efron", "breslow"),
  ...)
@@ -245,8 +251,8 @@ clogit(formula, data, weights, subset, na.action,
 
 <p><strong>变量说明</strong></p>
 <table border="1">
-  <tr> <th>formula</th><th>Model formula</th> </tr>
-  <tr> <th>data</th><th>data frame</th> </tr>
+  <tr> <th>formula*</th><th>Model formula</th> </tr>
+  <tr> <th>data*</th><th>data frame</th> </tr>
   <tr> <th>weights</th><th>optional, names the variable containing case weights</th> </tr>
   <tr> <th>subset</th><th>optional, subset the data</th> </tr>
   <tr> <th>na.action</th><th>optional na.action argument. By default the global option na.action is used</th> </tr>
@@ -254,38 +260,42 @@ clogit(formula, data, weights, subset, na.action,
 </table>
 
 
-<h1 id="R语言实战"><a href="#R语言实战" class="headerlink" title="R语言实战"></a>R语言实战</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>采用survival包内自带的数据集lung (NCCTG Lung Cancer Data)</p>
+<h1 id="R语言实战"><a href="#R语言实战" class="headerlink" title="R语言实战"></a>R语言实战</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>没有采用示例中的数据，我们导入survival包内自带的数据集lung (NCCTG Lung Cancer Data)</p>
 <pre>
 rm(list = ls())  #清空一下工作空间
 library(survival)
 data_lung<-survival::lung
-## 加入结局变量和分组信息
+## 加入我自己定的结局变量和分组信息
 outcome<- ifelse(data_lung$time <180,1,0)  #这里我们把180天内死亡设置为结局
 id<-rep(1:76,3)   #假装是1：2对照，生成1：76三次
-#id<-rep(1:76, each = 3) #另外一种方法
+#id<-rep(1:76, each = 3) #生成比较连续的数字
 data_lung$outcome<-outcome
 data_lung$id<-id
 #data_lung$outcome<-factor(data_lung$outcome) #这里千万不能将结局变量转化为因子，否则会运行报错
 clogit_full<-clogit(outcome ~ sex + strata(id),data =  data_lung)  #以性别为单变量做回归，strata(id)为输入配对编号的位置
 summary(clogit_full)
 </pre>
-<p>接着我们再用Logistic回归做一下性别的单变量回归</p>
+<p>接着我们再用glm函数做一下性别的单因素Logistic回归</p>
 <pre>
-logistic_full<-glm(outcome~sex,data=data_lung,family = "binomial")
+logistic_full<-glm(outcome ~ sex,data=data_lung,family = "binomial")
 summary(logistic_full)
-exp(coef(logistic_full)) 计算HR
+# 这里有个不好，glm函数的OR以及95%区间需要单独计算
+exp(coef(logistic_full)) 计算OR值
 exp(confint(logistic_full)) 计算95%区间
 </pre>
 
 <h2 id="结果输出"><a href="#结果输出" class="headerlink" title="结果输出"></a>结果输出</h2><h3 id="结果1-条件Logistic回归"><a href="#结果1-条件Logistic回归" class="headerlink" title="结果1~条件Logistic回归"></a>结果1~条件Logistic回归</h3><p><img src="http://cdn.rjny.icu/geo/7.JPG" alt="ggplot-1"><br>通过条件Logistic回归计算得出 0.617(0.299，1.274) p&#x3D;0.192 </br></p>
 <h3 id="结果2-Logistic回归"><a href="#结果2-Logistic回归" class="headerlink" title="结果2~Logistic回归"></a>结果2~Logistic回归</h3><pre>
-# 输出HR以及95%置信区间
+# 输出OR以及95%置信区间
                 2.5 %    97.5 %
 (Intercept) 0.4778247 2.6897932
 sex         0.2582867 0.8875878
 </pre>
+
 <p><img src="http://cdn.rjny.icu/geo/8.JPG" alt="ggplot-1"><br>如果不考虑到配对因素去回归得出0.486(0.258,0.887) p&#x3D;0.0214 *</br></p>
-<h3 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h3><p>这里得出这两个差异较大的结论，原因是我的配对分组比较随意，画出每个组的箱线图看出差异非常大，理想的是比较窄的箱线</p>
+<h3 id="结果3-SPSS中的条件Logistic回归"><a href="#结果3-SPSS中的条件Logistic回归" class="headerlink" title="结果3~SPSS中的条件Logistic回归"></a>结果3~SPSS中的条件Logistic回归</h3><p><img src="http://cdn.rjny.icu/geo/10.JPG" alt="ggplot-1"><br>我也在SPSS中计算了一下，具体方法见<a target="_blank" rel="noopener" href="https://m.medsci.cn/article/show_article.do?id=d2613436369">条件Logistic回归在SPSS中的实现</a></p>
+<p>可以看到这种方法计算得出的结果，0.677(0.352，1.303) p&#x3D;0.235，和R中计算的比较接近，但还是存在一定差异，不能够完全替代。</p>
+<h3 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h3><p>1、这里得出两个差异较大的结论，原因是我的配对分组比较随意。画出每个组的年龄分布的箱线图，可以看到差异非常大，理想的情况是比较窄的箱线。<br>2、所以如果数据本身基线水平比较整齐时，两种方式的差异可能不大，但如果两种基线特征差异比较大，且你在比较两组配对数据时没有考虑到这种统计学方法，会倾向生成更”大”OR值，也就是更向两端的值，在本文就是OR值更小（0.486&lt;0.617）。<br>3、SPSS和R中计算的不一样，可能是似然比计算上细微的差距</p>
 <pre>
 library(ggplot2)
 data_lung$id<-factor(data_lung$id)   #id需要转化为因子
@@ -376,7 +386,7 @@ ggplot(data = data_lung,mapping = aes(x = id, y = age))+
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">概念及实现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#clogit%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">clogit函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#R%E8%AF%AD%E8%A8%80%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">R语言实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E8%BE%93%E5%87%BA"><span class="nav-number">3.2.</span> <span class="nav-text">结果输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C1-%E6%9D%A1%E4%BB%B6Logistic%E5%9B%9E%E5%BD%92"><span class="nav-number">3.2.1.</span> <span class="nav-text">结果1~条件Logistic回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C2-Logistic%E5%9B%9E%E5%BD%92"><span class="nav-number">3.2.2.</span> <span class="nav-text">结果2~Logistic回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90"><span class="nav-number">3.2.3.</span> <span class="nav-text">简单分析</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">概念及实现方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#clogit%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">clogit函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#R%E8%AF%AD%E8%A8%80%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">R语言实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E8%BE%93%E5%87%BA"><span class="nav-number">3.2.</span> <span class="nav-text">结果输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C1-%E6%9D%A1%E4%BB%B6Logistic%E5%9B%9E%E5%BD%92"><span class="nav-number">3.2.1.</span> <span class="nav-text">结果1~条件Logistic回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C2-Logistic%E5%9B%9E%E5%BD%92"><span class="nav-number">3.2.2.</span> <span class="nav-text">结果2~Logistic回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C3-SPSS%E4%B8%AD%E7%9A%84%E6%9D%A1%E4%BB%B6Logistic%E5%9B%9E%E5%BD%92"><span class="nav-number">3.2.3.</span> <span class="nav-text">结果3~SPSS中的条件Logistic回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90"><span class="nav-number">3.2.4.</span> <span class="nav-text">简单分析</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
