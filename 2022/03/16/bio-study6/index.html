@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://cdn.rjny.icu/geo/6.JPG">
 <meta property="og:image" content="http://cdn.rjny.icu/geo/4.JPG">
 <meta property="article:published_time" content="2022-03-16T01:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-21T12:17:57.607Z">
+<meta property="article:modified_time" content="2022-03-28T15:33:56.000Z">
 <meta property="article:author" content="Chenyu Fan">
 <meta property="article:tag" content="生信">
 <meta property="article:tag" content="GEO">
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-03-21 20:17:57" itemprop="dateModified" datetime="2022-03-21T20:17:57+08:00">2022-03-21</time>
+                <time title="Modified: 2022-03-28 23:33:56" itemprop="dateModified" datetime="2022-03-28T23:33:56+08:00">2022-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,7 +251,7 @@
 <blockquote>
 <p>Ye H, Zhang J, Wang J, Gao Y et al. CD4 T-cell transcriptome analysis reveals aberrant regulation of STAT3 and Wnt signaling pathways in rheumatoid arthritis: evidence from a case-control study. Arthritis Res Ther 2015 Mar 22;17:76. PMID: 25880754</p>
 </blockquote>
-<p>**类风湿关节炎(RA)**是一种全身性自身免疫性疾病，其潜在的分子机制尚不清楚。此前，CD4 t细胞芯片研究只关注关节炎患者。我们的目的是比较活跃的RA和健康对照组CD4 T细胞的分子谱。<br/><br>本次研究从13名活动的RA患者和9名健康个体中分离高度纯化的外周血CD4 T细胞，进行RNA提取和Affymetrix微阵列杂交。</p>
+<p>类风湿关节炎(RA)是一种全身性自身免疫性疾病，其潜在的分子机制尚不清楚。此前，CD4 t细胞芯片研究只关注关节炎患者。我们的目的是比较活跃的RA和健康对照组CD4 T细胞的分子谱。<br/><br>本次研究从13名活动的RA患者和9名健康个体中分离高度纯化的外周血CD4 T细胞，进行RNA提取和Affymetrix微阵列杂交。</p>
 <h2 id="数据获取"><a href="#数据获取" class="headerlink" title="数据获取"></a>数据获取</h2><pre>
 gse_number = "GSE56649"   #设置num
 eSet <- getGEO(gse_number, destdir = '.', getGPL = F) #下载数据至本地工作空间
@@ -322,6 +322,9 @@ library(hgu133plus2.db)
 ls("package:hgu133plus2.db")
 ids <- toTable(hgu133plus2SYMBOL)
 head(ids)
+</pre>
+
+<pre>
 # 方法2 读取GPL网页的表格文件，按列取子集
 ##https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570
 if(F){
@@ -341,6 +344,8 @@ if(F){
 save(exp,Group,ids,gse_number,file = "step2output.Rdata")
 
 </pre>
+
+<p>如果出现一个探针对应多个基因-非特异性探针，可以去除</p>
 
     </div>
 
@@ -364,8 +369,8 @@ save(exp,Group,ids,gse_number,file = "step2output.Rdata")
       <i class="fa fa-chevron-left"></i> 生信学习笔记番外——学员考试题
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/03/21/r-study/" rel="next" title="条件logistic回归的R语言实现">
-      条件logistic回归的R语言实现 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/03/17/bio-study7/" rel="next" title="生信学习笔记07——GEO数据分析(2)">
+      生信学习笔记07——GEO数据分析(2) <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -441,7 +446,7 @@ save(exp,Group,ids,gse_number,file = "step2output.Rdata")
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
